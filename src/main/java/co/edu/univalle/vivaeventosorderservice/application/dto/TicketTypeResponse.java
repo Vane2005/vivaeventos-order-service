@@ -1,12 +1,14 @@
 package co.edu.univalle.vivaeventosorderservice.application.dto;
 
 import lombok.Getter;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.util.UUID;
 
 
 @Getter
+@Setter
 public class TicketTypeResponse {
     private UUID id;
     private String type;
