@@ -1,11 +1,9 @@
 package co.edu.univalle.vivaeventosorderservice.infraestructure.client;
 
+import co.edu.univalle.vivaeventosorderservice.application.dto.DiscountCodeResponse;
 import co.edu.univalle.vivaeventosorderservice.application.dto.TicketTypeResponse;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
@@ -20,4 +18,8 @@ public interface EventServiceClient {
 
     @PutMapping("/api/v1/events/ticket-types/{ticketTypeId}/release")
     void releaseStock(@PathVariable UUID ticketTypeId, @RequestParam int quantity);
+
+    @PostMapping("/api/v1/discount-codes/{code}/validate")
+    DiscountCodeResponse validateDiscountCode(@PathVariable String code);
+
 }

@@ -1,6 +1,7 @@
 package co.edu.univalle.vivaeventosorderservice.application.usecase;
 
 import co.edu.univalle.vivaeventosorderservice.application.dto.CreateOrderRequest;
+import co.edu.univalle.vivaeventosorderservice.application.dto.DiscountCodeResponse;
 import co.edu.univalle.vivaeventosorderservice.application.dto.OrderResponse;
 import co.edu.univalle.vivaeventosorderservice.application.dto.TicketTypeResponse;
 import co.edu.univalle.vivaeventosorderservice.domain.model.OrderStatus;
@@ -42,9 +43,29 @@ public class CreateOrderUseCase {
                     "Stock insuficiente. Disponible: " + ticketType.getQuantityAvailable());
         }
 
-        // 3. Calcular precio
+        // 3. Calcular precio base
         BigDecimal total = ticketType.getPrice()
                 .multiply(BigDecimal.valueOf(request.getQuantity()));
+
+        // 3b. Aplicar descuento si viene código
+        BigDecimal discountAmount = BigDecimal.ZERO;
+        String appliedCode = null;
+
+        if (request.getDiscountCode() != null && !request.getDiscountCode().isBlank()) {
+            DiscountCodeResponse discount = eventServiceClient
+                    .validateDiscountCode(request.getDiscountCode());
+
+            if ("PERCENTAGE".equals(discount.getDiscountType())) {
+                discountAmount = total.multiply(discount.getDiscountValue())
+                        .divide(BigDecimal.valueOf(100));
+            } else {
+                discountAmount = discount.getDiscountValue();
+            }
+
+            // El total no puede ser negativo
+            total = total.subtract(discountAmount).max(BigDecimal.ZERO);
+            appliedCode = discount.getCode();
+        }
 
         // 4. Crear orden PENDING con expiración de 10 min
         OrderEntity order = new OrderEntity();
@@ -57,6 +78,8 @@ public class CreateOrderUseCase {
         order.setStatus(OrderStatus.PENDING);
         order.setCreatedAt(Instant.now());
         order.setExpiresAt(Instant.now().plus(10, ChronoUnit.MINUTES));
+        order.setDiscountCode(appliedCode);
+        order.setDiscountAmount(discountAmount);
 
         OrderEntity saved = orderRepository.save(order);
 

@@ -2,6 +2,7 @@ package co.edu.univalle.vivaeventosorderservice.infraestructure.web;
 
 import co.edu.univalle.vivaeventosorderservice.application.dto.CreateOrderRequest;
 import co.edu.univalle.vivaeventosorderservice.application.dto.OrderResponse;
+import co.edu.univalle.vivaeventosorderservice.application.usecase.ConfirmOrderUseCase;
 import co.edu.univalle.vivaeventosorderservice.application.usecase.CreateOrderUseCase;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -13,11 +14,15 @@ import java.util.UUID;
 @RequestMapping("/api/v1/orders")
 public class OrderController {
 
-    private final CreateOrderUseCase createOrderUseCase;
+    private final ConfirmOrderUseCase confirmOrderUseCase;
 
-    public OrderController(CreateOrderUseCase createOrderUseCase) {
+    public OrderController(CreateOrderUseCase createOrderUseCase,
+                           ConfirmOrderUseCase confirmOrderUseCase) {
         this.createOrderUseCase = createOrderUseCase;
+        this.confirmOrderUseCase = confirmOrderUseCase;
     }
+
+    private final CreateOrderUseCase createOrderUseCase;
 
     @PostMapping
     public ResponseEntity<OrderResponse> createOrder(
@@ -25,5 +30,10 @@ public class OrderController {
             @Valid @RequestBody CreateOrderRequest request) {
         OrderResponse order = createOrderUseCase.execute(request, UUID.fromString(userId));
         return ResponseEntity.status(201).body(order);
+    }
+
+    @PatchMapping("/{orderId}/confirm")
+    public ResponseEntity<OrderResponse> confirmOrder(@PathVariable UUID orderId) {
+        return ResponseEntity.ok(OrderResponse.from(confirmOrderUseCase.execute(orderId)));
     }
 }
