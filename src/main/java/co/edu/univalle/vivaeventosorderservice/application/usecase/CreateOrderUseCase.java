@@ -80,6 +80,8 @@ public class CreateOrderUseCase {
         order.setExpiresAt(Instant.now().plus(10, ChronoUnit.MINUTES));
         order.setDiscountCode(appliedCode);
         order.setDiscountAmount(discountAmount);
+        order.setCustomerEmail(request.getCustomerEmail());
+        order.setCurrency("COP");
 
         OrderEntity saved = orderRepository.save(order);
 

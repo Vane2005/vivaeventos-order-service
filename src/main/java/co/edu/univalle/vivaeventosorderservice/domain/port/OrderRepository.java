@@ -5,8 +5,16 @@ import co.edu.univalle.vivaeventosorderservice.infraestructure.persistence.Order
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 public interface OrderRepository {
     OrderEntity save(OrderEntity order);
-    List<OrderEntity> findByStatusAndExpiresAtBefore(OrderStatus status, Instant now);
+
+    Optional<OrderEntity> findById(UUID id);
+
+    List<OrderEntity> findByStatusAndExpiresAtBefore(
+            OrderStatus status,
+            Instant now
+    );
 }

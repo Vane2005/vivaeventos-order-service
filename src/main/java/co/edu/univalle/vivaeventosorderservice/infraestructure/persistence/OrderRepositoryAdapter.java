@@ -6,6 +6,8 @@ import org.springframework.stereotype.Component;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Component
 public class OrderRepositoryAdapter implements OrderRepository {
@@ -24,5 +26,10 @@ public class OrderRepositoryAdapter implements OrderRepository {
     @Override
     public List<OrderEntity> findByStatusAndExpiresAtBefore(OrderStatus status, Instant now) {
         return jpaRepository.findByStatusAndExpiresAtBefore(status, now);
+    }
+
+    @Override
+    public Optional<OrderEntity> findById(UUID id) {
+        return jpaRepository.findById(id);
     }
 }
