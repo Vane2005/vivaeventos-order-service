@@ -3,27 +3,37 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: vivaeventos-user-service
+    container_name: vivaeventos-order-service
     ports:
-      - "8083:8080"
-    env_file: # Carga el .env
-      - .env
+      - "8083:8083"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/order-db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: "1234"
+      SERVICES_EVENT_SERVICE_URL: http://172.19.0.1:8082
+      JWT_SECRET: aVerySecretKeyThatIsAtLeast256BitsLongAndShouldBeStoredSecurely
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
     restart: always
 
   postgres:
     image: postgres:15
-    container_name: user-service-db
+    container_name: order-service-db
     restart: always
     environment:
-      POSTGRES_DB: user-db
+      POSTGRES_DB: order-db
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 1234
+      POSTGRES_PASSWORD: "1234"
     ports:
       - "5434:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
 volumes:
   postgres_data:

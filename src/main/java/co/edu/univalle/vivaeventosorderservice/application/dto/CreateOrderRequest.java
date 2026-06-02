@@ -17,4 +17,5 @@ public class CreateOrderRequest {
     @NotNull @Min(1)
     private Integer quantity;
     private String discountCode;
+    private String customerEmail;
 }

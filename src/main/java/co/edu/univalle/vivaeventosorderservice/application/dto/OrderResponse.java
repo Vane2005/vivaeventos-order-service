@@ -20,6 +20,8 @@ public class OrderResponse {
     private OrderStatus status;
     private Instant expiresAt;
     private Instant createdAt;
+    private String customerEmail;
+    private String currency;
 
     public static OrderResponse from(OrderEntity e) {
         OrderResponse r = new OrderResponse();
@@ -33,6 +35,8 @@ public class OrderResponse {
         r.status = e.getStatus();
         r.expiresAt = e.getExpiresAt();
         r.createdAt = e.getCreatedAt();
+        r.customerEmail = e.getCustomerEmail();
+        r.currency = e.getCurrency();
         return r;
     }
 

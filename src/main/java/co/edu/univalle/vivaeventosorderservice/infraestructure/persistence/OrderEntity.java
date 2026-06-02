@@ -52,4 +52,10 @@ public class OrderEntity {
     @Column(name = "discount_amount", precision = 12, scale = 2)
     private BigDecimal discountAmount;
 
+    @Column(name = "customer_email", nullable = false)
+    private String customerEmail;
+
+    @Column(name = "currency", nullable = false, length = 3)
+    private String currency;
+
 }
