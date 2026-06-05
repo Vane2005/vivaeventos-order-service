@@ -182,6 +182,8 @@
                             <excludes>
                                 <exclude>**/dto/**</exclude>
                                 <exclude>**/config/**</exclude>
+                                <exclude>**/model/**</exclude>
+                                <exclude>**/persistence/**</exclude>
                                 <exclude>**/*Application.class</exclude>
                             </excludes>
                         </configuration>
