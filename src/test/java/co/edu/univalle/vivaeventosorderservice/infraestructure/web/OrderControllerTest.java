@@ -31,7 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 // @WebMvcTest carga SOLO la capa web — mucho más rápido que @SpringBootTest
 @WebMvcTest(OrderController.class)
 @ActiveProfiles("test")
-class OrderControllerIT {
+class OrderControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
