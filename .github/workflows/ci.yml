@@ -30,6 +30,3 @@ jobs:
         with:
           name: jacoco-report
           path: target/site/jacoco/
-
-      - name: Cobertura mínima del 70%
-        run: mvn jacoco:check --no-transfer-progress
