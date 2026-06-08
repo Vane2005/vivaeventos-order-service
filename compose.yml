@@ -1,17 +1,20 @@
 services:
-  user-service:
+  order-service:
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     build:
       context: .
       dockerfile: Dockerfile
     container_name: vivaeventos-order-service
     ports:
       - "8083:8083"
+    env_file:
+      - .env
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/order-db
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: "1234"
-      SERVICES_EVENT_SERVICE_URL: http://172.19.0.1:8082
-      JWT_SECRET: aVerySecretKeyThatIsAtLeast256BitsLongAndShouldBeStoredSecurely
+      SERVICES_EVENT_SERVICE_URL: http://host.docker.internal:8082  # ← para Docker local
     depends_on:
       postgres:
         condition: service_healthy
